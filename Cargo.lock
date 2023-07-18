@@ -1388,7 +1388,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "leptos_start"
+name = "leptos_shadcn"
 version = "0.1.0"
 dependencies = [
  "actix-files",
