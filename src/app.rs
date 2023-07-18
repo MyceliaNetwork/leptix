@@ -13,13 +13,14 @@ pub fn App(cx: Scope) -> impl IntoView {
         <Stylesheet id="leptos" href="/pkg/leptos_shadcn.css"/>
 
         // sets the document title
-        <Title text="Welcome to Leptos"/>
+        <Title text="Leptos Shadcn port"/>
 
         // content for this welcome page
         <Router>
-            <main>
+            <main class=("prose")>
                 <Routes>
                     <Route path="" view=HomePage/>
+                    <Route path="/button" view=ButtonPage/>
                     <Route path="/*any" view=NotFound/>
                 </Routes>
             </main>
@@ -35,8 +36,16 @@ fn HomePage(cx: Scope) -> impl IntoView {
     let on_click = move |_| set_count.update(|count| *count += 1);
 
     view! { cx,
-        <h1>"Welcome to Leptos!"</h1>
+        <h1>"Welcome to Leptos Shadcn!"</h1>
         <button on:click=on_click>"Click Me: " {count}</button>
+    }
+}
+
+/// Renders the home page of your application.
+#[component]
+fn ButtonPage(cx: Scope) -> impl IntoView {
+    view! { cx,
+        <h1>"Button"</h1>
     }
 }
 
