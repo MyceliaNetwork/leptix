@@ -1,5 +1,6 @@
 pub mod app;
 use cfg_if::cfg_if;
+mod routes;
 
 cfg_if! {
 if #[cfg(feature = "hydrate")] {

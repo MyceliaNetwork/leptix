@@ -2,6 +2,11 @@ use leptos::*;
 use leptos_meta::*;
 use leptos_router::*;
 
+use crate::routes::home::HomePage;
+use crate::routes::button::ButtonPage;
+use crate::routes::checkbox::CheckboxPage;
+use crate::routes::label::LabelPage;
+
 #[component]
 pub fn App(cx: Scope) -> impl IntoView {
     // Provides context that manages stylesheets, titles, meta tags, etc.
@@ -17,10 +22,13 @@ pub fn App(cx: Scope) -> impl IntoView {
 
         // content for this welcome page
         <Router>
-            <main class=("prose")>
+            <Nav />
+            <main class=("prose p-4")>
                 <Routes>
                     <Route path="" view=HomePage/>
+                    <Route path="/label" view=LabelPage/>
                     <Route path="/button" view=ButtonPage/>
+                    <Route path="/checkbox" view=CheckboxPage/>
                     <Route path="/*any" view=NotFound/>
                 </Routes>
             </main>
@@ -28,26 +36,31 @@ pub fn App(cx: Scope) -> impl IntoView {
     }
 }
 
-/// Renders the home page of your application.
 #[component]
-fn HomePage(cx: Scope) -> impl IntoView {
-    // Creates a reactive value to update the button
-    let (count, set_count) = create_signal(cx, 0);
-    let on_click = move |_| set_count.update(|count| *count += 1);
-
+pub fn Nav(cx: Scope) -> impl IntoView {
     view! { cx,
-        <h1>"Welcome to Leptix!"</h1>
-        <button on:click=on_click>"Click Me: " {count}</button>
+        <header>
+            <nav class=("p-4 flex gap-8")>
+                <A href="/">
+                    "Home"
+                </A>
+                <A href="/button">
+                    "Button"
+                </A>
+                <A href="/checkbox">
+                    "Checkbox"
+                </A>
+                <A href="/label">
+                    "Label"
+                </A>
+                <a class="github" href="github.com/departurelabsic/" target="_blank" rel="noreferrer">
+                    "Built by Mycelia"
+                </a>
+            </nav>
+        </header>
     }
 }
 
-/// Renders the home page of your application.
-#[component]
-fn ButtonPage(cx: Scope) -> impl IntoView {
-    view! { cx,
-        <h1>"Button"</h1>
-    }
-}
 
 /// 404 - Not Found
 #[component]
