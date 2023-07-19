@@ -3,9 +3,9 @@
     <img src="https://raw.githubusercontent.com/leptos-rs/leptos/main/docs/logos/Leptos_logo_RGB.svg" alt="Leptos Logo">
 </picture>
 
-# Leptos Shadcn port
+# Leptix - A Leptos Radix port
 
-This is a port of shadcn using a template for use with the [Leptos](https://github.com/leptos-rs/leptos) web framework and the [cargo-leptos](https://github.com/akesson/cargo-leptos) tool.
+This is a port of Radix UI for the [Leptos](https://github.com/leptos-rs/leptos) Rust web framework.
 
 ## Creating your template repo
 
@@ -48,14 +48,14 @@ After running a `cargo leptos build --release` the minimum files needed are:
 Copy these files to your remote server. The directory structure should be:
 
 ```text
-leptos_shadcn
+leptix
 site/
 ```
 
 Set the following environment variables (updating for your project as needed):
 
 ```sh
-export LEPTOS_OUTPUT_NAME="leptos_shadcn"
+export LEPTOS_OUTPUT_NAME="leptix"
 export LEPTOS_SITE_ROOT="site"
 export LEPTOS_SITE_PKG_DIR="pkg"
 export LEPTOS_SITE_ADDR="127.0.0.1:3000"
