@@ -1,14 +1,13 @@
 use leptos::*;
 
-// TODO: see if you can validate Children, being a String or Input.
-// Maybe use: https://docs.rs/leptos/latest/leptos/struct.NodeRef.html
 #[component]
 fn Label(
     cx: Scope,
-    #[prop(into)] 
-    html_for: String,
-    #[prop(optional, into)]
+    #[prop(default = None, optional, into)] 
+    html_for: Option<String>,
+    #[prop(default = None, optional, into)]
     class: Option<AttributeValue>,
+    // TODO: would be nice if we could specify what types of Children are allowed
     children: Children
 ) -> impl IntoView {
     view! { cx,
@@ -32,12 +31,20 @@ pub fn LabelPage(cx: Scope) -> impl IntoView {
     view! { cx,
         <h1>"Label"</h1>
         <h2>"Example"</h2>
-        // FIXME: the class attribute on the <Label /> is not picked up by tailwind/Actix
-        <Label html_for="first-name" class="pr-2">"First name"</Label>
-        <input
-            id="first-name"
-            class=("p-1 border border-slate-500")
-        />
+
+        <div>
+            <Label html_for="first-name">"For attribute"</Label>
+            <input
+                id="first-name"
+                class=("p-1 border border-slate-500")
+            />
+        </div>
+
+        <Label>
+            "Nested Label"
+            <input type="text" class=("p-1 border border-slate-500") />
+        </Label>
+
         <h2>"Features"</h2>
         <ul>
             <li>"Text selection is prevented when double clicking label."</li>
