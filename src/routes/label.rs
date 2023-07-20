@@ -32,6 +32,7 @@ pub fn LabelPage(cx: Scope) -> impl IntoView {
     view! { cx,
         <h1>"Label"</h1>
         <h2>"Example"</h2>
+        // FIXME: the class attribute on the <Label /> is not picked up by tailwind/Actix
         <Label html_for="first-name" class="pr-2">"First name"</Label>
         <input
             id="first-name"
