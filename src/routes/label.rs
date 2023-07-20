@@ -14,7 +14,7 @@ fn Label(
             for=html_for
             on:mousedown=move |ev| {
                 // prevent text selection when double clicking label
-                if ev.default_prevented() && ev.detail() > 1 {
+                if !ev.default_prevented() && ev.detail() > 1 {
                     ev.prevent_default();
                 }
             }
@@ -37,4 +37,3 @@ pub fn LabelPage(cx: Scope) -> impl IntoView {
 
     }
 }
-
