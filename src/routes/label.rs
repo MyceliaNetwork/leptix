@@ -5,11 +5,20 @@ use leptos::*;
 #[component]
 fn Label(
     cx: Scope,
-    #[prop(into)] html_for: String,
+    #[prop(into)] 
+    html_for: String,
     children: Children
 ) -> impl IntoView {
     view! { cx,
-        <label for=html_for>
+        <label
+            for=html_for
+            on:mousedown=move |ev| {
+                // prevent text selection when double clicking label
+                if ev.default_prevented() && ev.detail() > 1 {
+                    ev.prevent_default();
+                }
+            }
+        >
             {children(cx)}
         </label>
     }
