@@ -3,12 +3,14 @@ use leptos::*;
 #[component]
 fn Label(
     cx: Scope,
-    #[prop(default = None, optional, into)] 
-    html_for: Option<String>,
+    
     #[prop(default = None, optional, into)]
-    class: Option<AttributeValue>,
-    // TODO: would be nice if we could specify what types of Children are allowed
-    children: Children
+    html_for: Option<String>,
+    
+    #[prop(default = None, optional, into)]
+    class: Option<AttributeValue>,    
+
+    children: Children // TODO: specify what types of Children are allowed
 ) -> impl IntoView {
     view! { cx,
         <label
