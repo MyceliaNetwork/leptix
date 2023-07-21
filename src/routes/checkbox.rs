@@ -8,13 +8,17 @@ fn Checkbox (
     class: Option<AttributeValue>,
 
     #[prop(into)]
-    checked: Signal<bool>
+    disabled: ReadSignal<bool>,
+
+    #[prop(into)]
+    checked: ReadSignal<bool>,
     
 ) -> impl IntoView {
     view! { cx,
         <input
             type="checkbox"
             class=class
+            disabled=disabled
             prop:value=checked
         />
     }
@@ -23,12 +27,23 @@ fn Checkbox (
 #[component]
 pub fn CheckboxPage(cx: Scope) -> impl IntoView {
     let (checked, set_checked) = create_signal(cx, false);
+    let (disabled, set_disabled) = create_signal(cx, true);
 
     view! { cx,
         <h1>"Checkbox"</h1>
         <h2>"Example"</h2>
+        <button
+            type="button"
+            on:click=move |_| {
+                set_disabled(!disabled.get())
+            }
+        >
+            "Toggle disabled"
+        </button>
+
         <Checkbox
-            checked={checked}
+            checked=checked
+            disabled=disabled
             on:change=move |ev| {
                 set_checked(event_target_checked(&ev));
             }
