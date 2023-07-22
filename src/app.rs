@@ -41,18 +41,18 @@ pub fn Nav(cx: Scope) -> impl IntoView {
     view! { cx,
         <header>
             <nav class=("p-4 flex gap-8")>
-                <a href="/">
+                <A href="/">
                     "Home"
-                </a>
-                <a href="/button">
+                </A>
+                <A href="/button">
                     "Button"
-                </a>
-                <a href="/checkbox">
+                </A>
+                <A href="/checkbox">
                     "Checkbox"
-                </a>
-                <a href="/label">
+                </A>
+                <A href="/label">
                     "Label"
-                </a>
+                </A>
                 <a class="github" href="github.com/departurelabsic/" target="_blank" rel="noreferrer">
                     "Built by Mycelia"
                 </a>
