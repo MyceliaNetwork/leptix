@@ -10,9 +10,9 @@ use crate::routes::label::LabelPage;
 #[component]
 pub fn App(cx: Scope) -> impl IntoView {
     // Provides context that manages stylesheets, titles, meta tags, etc.
-    provide_meta_context(cx);
+    let _ = provide_meta_context(cx);
 
-    view! { cx,
+    view! { cx,x
         // injects a stylesheet into the document <head>
         // id=leptos means cargo-leptos will hot-reload this stylesheet
         <Stylesheet id="leptos" href="/pkg/leptix.css"/>
@@ -41,18 +41,18 @@ pub fn Nav(cx: Scope) -> impl IntoView {
     view! { cx,
         <header>
             <nav class=("p-4 flex gap-8")>
-                <A href="/">
+                <a href="/">
                     "Home"
-                </A>
-                <A href="/button">
+                </a>
+                <a href="/button">
                     "Button"
-                </A>
-                <A href="/checkbox">
+                </a>
+                <a href="/checkbox">
                     "Checkbox"
-                </A>
-                <A href="/label">
+                </a>
+                <a href="/label">
                     "Label"
-                </A>
+                </a>
                 <a class="github" href="github.com/departurelabsic/" target="_blank" rel="noreferrer">
                     "Built by Mycelia"
                 </a>
