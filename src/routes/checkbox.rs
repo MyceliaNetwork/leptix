@@ -3,32 +3,24 @@ use leptos::*;
 
 const INDETERMINATE: &str = "indeterminate";
 
-enum CheckedValue {
-    True,
-    False,
-    Indeterminate,
+pub enum BoolOrString {
+    Bool(bool),
+    Str(String),
 }
 
-impl CheckedValue {
-    fn is_true(&self) -> bool {
-        if let CheckedValue::True = self {
-            return true;
+// Implement functions for the enum
+impl BoolOrString {
+    pub fn get_value(&self) -> &str {
+        match self {
+            BoolOrString::Bool(b) => {
+                if *b {
+                    "true"
+                } else {
+                    "false"
+                }
+            },
+            BoolOrString::Str(s) => INDETERMINATE,
         }
-        return false;
-    }
-
-    fn is_false(&self) -> bool {
-        if let CheckedValue::False = self {
-            return true;
-        }
-        return false;
-    }
-
-    fn is_indeterminate(&self) -> bool {
-        if let CheckedValue::Indeterminate = self {
-            return true;
-        }
-        return false;
     }
 }
 
@@ -45,8 +37,8 @@ fn BubbleCheckbox (
     #[prop(optional, into)]
     required: Option<AttributeValue>,
 
-    #[prop(into)]
-    checked: ReadSignal<bool>,
+    // #[prop(into)]
+    // checked: ReadSignal<bool>,
     
 ) -> impl IntoView {
     // disabled
@@ -68,15 +60,19 @@ fn BubbleCheckbox (
     // FIXME: still renders to "true" in the DOM. Most likely a Leptos issue
     // let value = if checked.get().clone() { "on" } else { "off" };
     // console_log(value);
+
+    // let true_val = BoolOrString::Bool(true);
+    // let false_val = BoolOrString::Bool(false);
+    let indeterminate_val = BoolOrString::Str(INDETERMINATE.to_string());
  
     view! { cx,
         <button
             type="button"
             role="checkbox"
-            aria-required=required.clone()
+            aria_required=required.clone()
             // TODO: add indeterminate state
-            aria-checked=checked
-            data-disabled=disabled.clone()
+            aria_checked="indeterminate"
+            data_disabled=disabled.clone()
             // TODO: add composeEventHandlers
             on:keydown=move |ev| {
                 // According to WAI ARIA, Checkboxes don't activate on enter keypress
@@ -87,6 +83,7 @@ fn BubbleCheckbox (
         />
         <input
             type="checkbox"
+            checked="indeterminate"
             aria-hidden
             class=class
             disabled=disabled
@@ -100,7 +97,7 @@ fn BubbleCheckbox (
 
 #[component]
 pub fn CheckboxPage(cx: Scope) -> impl IntoView {
-    let (checked, set_checked) = create_signal(cx, false);
+    // let (checked, set_checked) = create_signal(cx, false);
     let (disabled, set_disabled) = create_signal(cx, false);
     let (required, set_required) = create_signal(cx, false);
 
@@ -131,13 +128,13 @@ pub fn CheckboxPage(cx: Scope) -> impl IntoView {
         </div>
 
         <BubbleCheckbox
-            checked=checked
+            // checked=checked
             disabled=disabled
             required=required
-            on:change=move |ev| {
-                // let value = if &ev { CheckedValue::True } else { CheckedValue::False };
-                set_checked(event_target_checked(&ev));
-            }
+            // on:change=move |ev| {
+            //     // let value = if &ev { CheckedValue::True } else { CheckedValue::False };
+            //     set_checked(event_target_checked(&ev));
+            // }
         />
     }
 }
