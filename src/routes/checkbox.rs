@@ -1,5 +1,42 @@
 use leptos::*;
+use core::fmt;
 // use crate::routes::checkbox::leptos_dom::console_log;
+
+// const INDETERMINATE: &'static str = "indeterminate";
+
+#[derive(Debug)]
+enum CheckedValue {
+    True = Bool(true),
+    Falsea = Bool(false),
+    Indeterminate = String("indeterminate"),
+}
+
+impl fmt::Display for CheckedValue {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{:?}", self)
+        // or, alternatively:
+        // fmt::Debug::fmt(self, f)
+    }
+}
+
+
+// TODO: Perhaps should use `union` in stead
+// enum CheckedState {
+//     INDETERMINATE,
+//     Boolean(bool),
+// }
+
+
+
+// fn is_indeterminate(s: CheckedState) -> bool {
+//     unsafe {
+//         match s {
+//             Value { INDETERMINATE } => true,
+//             _ => false,
+//         }
+//     }
+// }
+
 
 #[component]
 fn BubbleCheckbox (
@@ -14,8 +51,8 @@ fn BubbleCheckbox (
     #[prop(optional, into)]
     required: Option<AttributeValue>,
 
-    #[prop(into)]
-    checked: ReadSignal<bool>,
+    #[prop()]
+    checked: ReadSignal<CheckedState>,
     
 ) -> impl IntoView {
     // disabled
@@ -46,6 +83,7 @@ fn BubbleCheckbox (
             // TODO: add indeterminate state
             aria-checked=checked
             data-disabled=disabled.clone()
+            // TODO: add composeEventHandlers
             on:keydown=move |ev| {
                 // According to WAI ARIA, Checkboxes don't activate on enter keypress
                 if ev.key() == "Enter" {
@@ -68,7 +106,9 @@ fn BubbleCheckbox (
 
 #[component]
 pub fn CheckboxPage(cx: Scope) -> impl IntoView {
-    let (checked, set_checked) = create_signal(cx, true);
+    let indeterminate: &'static CheckedValue = CheckedValue::Indeterminate; // "Indeterminate"
+    // let c: Boolean = CheckedValue::Boolean.to_boolean(); // 
+    let (checked, set_checked) = create_signal(cx, indeterminate);
     let (disabled, set_disabled) = create_signal(cx, false);
     let (required, set_required) = create_signal(cx, false);
 
