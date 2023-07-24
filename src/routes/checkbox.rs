@@ -1,7 +1,7 @@
 use leptos::*;
 // use crate::routes::checkbox::leptos_dom::console_log;
 
-const INDETERMINATE: &str = "indeterminate";
+pub const INDETERMINATE: &str = "indeterminate";
 
 pub enum BoolOrString {
     Bool(bool),
@@ -63,16 +63,16 @@ fn BubbleCheckbox (
 
     // let true_val = BoolOrString::Bool(true);
     // let false_val = BoolOrString::Bool(false);
-    let indeterminate_val = BoolOrString::Str(INDETERMINATE.to_string());
+    // let indeterminate_val = BoolOrString::Str(String::from("inderterminate"));
  
     view! { cx,
         <button
             type="button"
             role="checkbox"
-            aria_required=required.clone()
+            aria-required=required.clone()
             // TODO: add indeterminate state
-            aria_checked="indeterminate"
-            data_disabled=disabled.clone()
+            aria-checked=INDETERMINATE
+            data-disabled=disabled.clone()
             // TODO: add composeEventHandlers
             on:keydown=move |ev| {
                 // According to WAI ARIA, Checkboxes don't activate on enter keypress
@@ -83,7 +83,7 @@ fn BubbleCheckbox (
         />
         <input
             type="checkbox"
-            checked="indeterminate"
+            checked=INDETERMINATE
             aria-hidden
             class=class
             disabled=disabled
