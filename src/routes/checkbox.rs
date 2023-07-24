@@ -1,45 +1,45 @@
 use leptos::*;
-// use crate::routes::checkbox::leptos_dom::console_log;
+use crate::routes::checkbox::leptos_dom::console_log;
+
+trait CheckedState {
+    fn into_attribute(&self) -> String;
+}
 
 pub const INDETERMINATE: &str = "indeterminate";
 
-struct CheckedBoolean {
+struct CheckedStateBoolean {
     value: bool,
 }
 
-struct CheckedIntermediate {
+struct CheckedStateInderterminate {
     value: String
 }
 
-trait CheckedState {
-    fn is_true(&self) -> bool;
-    fn is_false(&self) -> bool;
-    fn is_indeterminate(&self) -> bool;
+enum Checked<B: CheckedState, I: CheckedState> {
+    Bool(B),
+    Indeterminate(I)
 }
 
-impl CheckedState for CheckedBoolean {
-    fn is_true(&self) -> bool {
-        return self.value == true;
-    }
-    fn is_false(&self) -> bool {
-        return self.value == false;
-    }
-    fn is_indeterminate(&self) -> bool {
-        return false;
+impl CheckedState for CheckedStateBoolean {
+    fn into_attribute(&self) -> String {
+        return self.value.to_string();
     }
 }
 
-impl CheckedState for CheckedIntermediate {
-    fn is_true(&self) -> bool {
-        return false;
+impl CheckedState for CheckedStateInderterminate {
+    fn into_attribute(&self) -> String {
+        return self.value.clone();
     }
-    fn is_false(&self) -> bool {
-        return false;
-    }
-    fn is_indeterminate(&self) -> bool {
-        return self.value == INDETERMINATE;
-    }
+}
 
+
+impl<B: CheckedState, U: CheckedState>, Checked<B, I> {
+    fn into_attribute(&self) -> String {
+        match self {
+            Checked::Bool(value) => value.into_attribute(),
+            Checked::Indeterminate(value) => value.into_attribute(),
+        }
+    }
 }
 
 #[component]
@@ -83,7 +83,11 @@ fn BubbleCheckbox (
     // let false_val = BoolOrString::Bool(false);
     // let indeterminate_val = BoolOrString::Str(String::from("inderterminate"));
 
-    let checked = INDETERMINATE;
+    // let checked = INDETERMINATE;
+
+    let checked_true = CheckedStateBoolean { value: true };
+    let checked = Checked::Bool(checked_true);
+    console_log(checked.into_attribute());
  
     view! { cx,
         <button
@@ -91,7 +95,7 @@ fn BubbleCheckbox (
             role="checkbox"
             aria-required=required.clone()
             // TODO: add indeterminate state
-            aria-checked=checked
+            aria-checked=&checked.into_attribute()
             data-disabled=disabled.clone()
             // TODO: add composeEventHandlers
             on:keydown=move |ev| {
@@ -103,7 +107,6 @@ fn BubbleCheckbox (
         />
         <input
             type="checkbox"
-            checked=checked
             aria-hidden
             class=class
             disabled=disabled
