@@ -64,6 +64,8 @@ fn BubbleCheckbox (
     // let true_val = BoolOrString::Bool(true);
     // let false_val = BoolOrString::Bool(false);
     // let indeterminate_val = BoolOrString::Str(String::from("inderterminate"));
+
+    let checked = INDETERMINATE;
  
     view! { cx,
         <button
@@ -71,7 +73,7 @@ fn BubbleCheckbox (
             role="checkbox"
             aria-required=required.clone()
             // TODO: add indeterminate state
-            aria-checked=INDETERMINATE
+            aria-checked=checked
             data-disabled=disabled.clone()
             // TODO: add composeEventHandlers
             on:keydown=move |ev| {
@@ -83,7 +85,7 @@ fn BubbleCheckbox (
         />
         <input
             type="checkbox"
-            checked=INDETERMINATE
+            checked=checked
             aria-hidden
             class=class
             disabled=disabled
