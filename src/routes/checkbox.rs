@@ -1,41 +1,31 @@
 use leptos::*;
-use core::fmt;
 // use crate::routes::checkbox::leptos_dom::console_log;
 
 // const INDETERMINATE: &'static str = "indeterminate";
 
-#[derive(Debug)]
-enum CheckedValue {
-    True = Bool(true),
-    Falsea = Bool(false),
-    Indeterminate = String("indeterminate"),
+struct CheckedBool {
+    True: Bool,
+    False: Bool
 }
 
-impl fmt::Display for CheckedValue {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "{:?}", self)
-        // or, alternatively:
-        // fmt::Debug::fmt(self, f)
+struct Indeterminate<'a> {
+    value: &'a str
+}
+
+enum CheckedValue<'a> {
+    Bool(CheckedBool),
+    Indeterminate(Indeterminate<'a>),
+}
+
+fn test<'a>(v: CheckedValue<'a>) {
+    match v {
+        CheckedValue::Bool( CheckedBool { width: w, height: h }) =>
+            println!("CheckedValue::Bool:{}, h:{}", w, h),
+        CheckedValue::Indeterminate( Indeterminate { value: u }) =>
+            println!("Indeterminate :{}", u),
     }
 }
 
-
-// TODO: Perhaps should use `union` in stead
-// enum CheckedState {
-//     INDETERMINATE,
-//     Boolean(bool),
-// }
-
-
-
-// fn is_indeterminate(s: CheckedState) -> bool {
-//     unsafe {
-//         match s {
-//             Value { INDETERMINATE } => true,
-//             _ => false,
-//         }
-//     }
-// }
 
 
 #[component]
@@ -52,7 +42,7 @@ fn BubbleCheckbox (
     required: Option<AttributeValue>,
 
     #[prop()]
-    checked: ReadSignal<CheckedState>,
+    checked: Signal<CheckedState>,
     
 ) -> impl IntoView {
     // disabled
@@ -81,7 +71,7 @@ fn BubbleCheckbox (
             role="checkbox"
             aria-required=required.clone()
             // TODO: add indeterminate state
-            aria-checked=checked
+            aria-checked=checked.as_dom_value()
             data-disabled=disabled.clone()
             // TODO: add composeEventHandlers
             on:keydown=move |ev| {
@@ -106,7 +96,7 @@ fn BubbleCheckbox (
 
 #[component]
 pub fn CheckboxPage(cx: Scope) -> impl IntoView {
-    let indeterminate: &'static CheckedValue = CheckedValue::Indeterminate; // "Indeterminate"
+    let indeterminate: &'static CheckedValue = &CheckedValue::Indeterminate; // "Indeterminate"
     // let c: Boolean = CheckedValue::Boolean.to_boolean(); // 
     let (checked, set_checked) = create_signal(cx, indeterminate);
     let (disabled, set_disabled) = create_signal(cx, false);
@@ -143,7 +133,9 @@ pub fn CheckboxPage(cx: Scope) -> impl IntoView {
             disabled=disabled
             required=required
             on:change=move |ev| {
-                set_checked(event_target_checked(&ev));
+                event_target_checked(&ev);
+                let value = if &ev { CheckedValue::True } else { CheckedValue::False };
+                set_checked(&value);
             }
         />
     }
