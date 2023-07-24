@@ -3,25 +3,43 @@ use leptos::*;
 
 pub const INDETERMINATE: &str = "indeterminate";
 
-pub enum BoolOrString {
-    Bool(bool),
-    Str(String),
+struct CheckedBoolean {
+    value: bool,
 }
 
-// Implement functions for the enum
-impl BoolOrString {
-    pub fn get_value(&self) -> &str {
-        match self {
-            BoolOrString::Bool(b) => {
-                if *b {
-                    "true"
-                } else {
-                    "false"
-                }
-            },
-            BoolOrString::Str(s) => INDETERMINATE,
-        }
+struct CheckedIntermediate {
+    value: String
+}
+
+trait CheckedState {
+    fn is_true(&self) -> bool;
+    fn is_false(&self) -> bool;
+    fn is_indeterminate(&self) -> bool;
+}
+
+impl CheckedState for CheckedBoolean {
+    fn is_true(&self) -> bool {
+        return self.value == true;
     }
+    fn is_false(&self) -> bool {
+        return self.value == false;
+    }
+    fn is_indeterminate(&self) -> bool {
+        return false;
+    }
+}
+
+impl CheckedState for CheckedIntermediate {
+    fn is_true(&self) -> bool {
+        return false;
+    }
+    fn is_false(&self) -> bool {
+        return false;
+    }
+    fn is_indeterminate(&self) -> bool {
+        return self.value == INDETERMINATE;
+    }
+
 }
 
 #[component]
