@@ -1,7 +1,36 @@
 use leptos::*;
 // use crate::routes::checkbox::leptos_dom::console_log;
 
-// const indeterminate: &str = "indeterminate";
+const INDETERMINATE: &str = "indeterminate";
+
+enum CheckedValue {
+    True,
+    False,
+    Indeterminate,
+}
+
+impl CheckedValue {
+    fn is_true(&self) -> bool {
+        if let CheckedValue::True = self {
+            return true;
+        }
+        return false;
+    }
+
+    fn is_false(&self) -> bool {
+        if let CheckedValue::False = self {
+            return true;
+        }
+        return false;
+    }
+
+    fn is_indeterminate(&self) -> bool {
+        if let CheckedValue::Indeterminate = self {
+            return true;
+        }
+        return false;
+    }
+}
 
 #[component]
 fn BubbleCheckbox (
