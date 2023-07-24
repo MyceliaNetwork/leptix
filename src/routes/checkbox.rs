@@ -1,11 +1,11 @@
 use leptos::*;
-use crate::routes::checkbox::leptos_dom::console_log;
+// use crate::routes::checkbox::leptos_dom::console_log;
 
 #[component]
 fn BubbleCheckbox (
     cx: Scope,
 
-    #[prop(default = None, optional, into)]
+    #[prop(optional, into)]
     class: Option<AttributeValue>,
 
     #[prop(optional, into)]
@@ -34,11 +34,9 @@ fn BubbleCheckbox (
     let required = required.unwrap();
     let required = required.into_attribute_boxed(cx);
 
-    // FIXME: still renders to 
-    // value
-    let value = if checked.get() { "on" } else { "off" };
-
-    console_log(value);
+    // FIXME: still renders to "true" in the DOM. Most likely a Leptos issue
+    // let value = if checked.get().clone() { "on" } else { "off" };
+    // console_log(value);
  
     view! { cx,
         <button
@@ -46,7 +44,7 @@ fn BubbleCheckbox (
             role="checkbox"
             aria-required=required.clone()
             // TODO: add indeterminate state
-            aria-checked=""
+            aria-checked=checked
             data-disabled=disabled.clone()
             on:keydown=move |ev| {
                 // According to WAI ARIA, Checkboxes don't activate on enter keypress
@@ -61,7 +59,6 @@ fn BubbleCheckbox (
             class=class
             disabled=disabled
             required=required
-            prop:value=checked
             tab-index="-1"
             // TODO: uncomment when we have an Indicator component
             // style="position: 'absolute'; pointer_events: 'none'; opacity: 0; margin: 0;"
