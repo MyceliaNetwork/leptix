@@ -1,7 +1,7 @@
 use leptos::*;
 
 #[component]
-fn Checkbox (
+fn BubbleCheckbox (
     cx: Scope,
 
     #[prop(default = None, optional, into)]
@@ -32,14 +32,29 @@ fn Checkbox (
     }
     let required = required.unwrap();
     let required = required.into_attribute_boxed(cx);
+
+    let value = if checked.get() { "on" } else { "off" };
  
     view! { cx,
+        <button
+            type="button"
+            role="checkbox"
+            aria-required=required.clone()
+            // TODO: add indeterminate state
+            aria-checked=""
+            data-disabled=disabled.clone()
+        />
         <input
             type="checkbox"
+            aria-hidden
             class=class
             disabled=disabled
             required=required
             prop:value=checked
+            tab-index="-1"
+            value=value
+            // TODO: uncomment when we have an Indicator component
+            // style="position: 'absolute'; pointer_events: 'none'; opacity: 0; margin: 0;"
         />
     }
 }
@@ -76,7 +91,7 @@ pub fn CheckboxPage(cx: Scope) -> impl IntoView {
             </button>
         </div>
 
-    <Checkbox
+        <BubbleCheckbox
             checked=checked
             disabled=disabled
             required=required
