@@ -1,46 +1,8 @@
 use leptos::*;
-use crate::routes::checkbox::leptos_dom::console_log;
+// use either::*;
+// use crate::routes::checkbox::leptos_dom::console_log;
 
-trait CheckedState {
-    fn into_attribute(&self) -> String;
-}
-
-pub const INDETERMINATE: &str = "indeterminate";
-
-struct CheckedStateBoolean {
-    value: bool,
-}
-
-struct CheckedStateInderterminate {
-    value: String
-}
-
-enum Checked<B: CheckedState, I: CheckedState> {
-    Bool(B),
-    Indeterminate(I)
-}
-
-impl CheckedState for CheckedStateBoolean {
-    fn into_attribute(&self) -> String {
-        return self.value.to_string();
-    }
-}
-
-impl CheckedState for CheckedStateInderterminate {
-    fn into_attribute(&self) -> String {
-        return self.value.clone();
-    }
-}
-
-
-impl<B: CheckedState, U: CheckedState>, Checked<B, I> {
-    fn into_attribute(&self) -> String {
-        match self {
-            Checked::Bool(value) => value.into_attribute(),
-            Checked::Indeterminate(value) => value.into_attribute(),
-        }
-    }
-}
+const INDETERMINATE: &str = "indeterminate";
 
 #[component]
 fn BubbleCheckbox (
@@ -57,7 +19,7 @@ fn BubbleCheckbox (
 
     // #[prop(into)]
     // checked: ReadSignal<bool>,
-    
+
 ) -> impl IntoView {
     // disabled
     let mut disabled = disabled;
@@ -78,16 +40,6 @@ fn BubbleCheckbox (
     // FIXME: still renders to "true" in the DOM. Most likely a Leptos issue
     // let value = if checked.get().clone() { "on" } else { "off" };
     // console_log(value);
-
-    // let true_val = BoolOrString::Bool(true);
-    // let false_val = BoolOrString::Bool(false);
-    // let indeterminate_val = BoolOrString::Str(String::from("inderterminate"));
-
-    // let checked = INDETERMINATE;
-
-    let checked_true = CheckedStateBoolean { value: true };
-    let checked = Checked::Bool(checked_true);
-    console_log(checked.into_attribute());
  
     view! { cx,
         <button
@@ -95,7 +47,7 @@ fn BubbleCheckbox (
             role="checkbox"
             aria-required=required.clone()
             // TODO: add indeterminate state
-            aria-checked=&checked.into_attribute()
+            aria-checked=INDETERMINATE
             data-disabled=disabled.clone()
             // TODO: add composeEventHandlers
             on:keydown=move |ev| {
@@ -105,6 +57,8 @@ fn BubbleCheckbox (
                 }
             }
         />
+        // TODO: use slots for conditionally rendering this:
+        // https://github.com/leptos-rs/leptos/blob/main/examples/slots/src/lib.rs
         <input
             type="checkbox"
             aria-hidden
@@ -112,6 +66,7 @@ fn BubbleCheckbox (
             disabled=disabled
             required=required
             tab-index="-1"
+            checked=INDETERMINATE
             // TODO: uncomment when we have an Indicator component
             // style="position: 'absolute'; pointer_events: 'none'; opacity: 0; margin: 0;"
         />
