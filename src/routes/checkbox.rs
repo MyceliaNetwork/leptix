@@ -1,8 +1,28 @@
 use leptos::*;
 // use either::*;
-// use crate::routes::checkbox::leptos_dom::console_log;
+use crate::routes::checkbox::leptos_dom::console_log;
 
+// TODO: make these pub and match on them within <Checkbox />
 const INDETERMINATE: &str = "indeterminate";
+const TRUE: bool = true;
+const FALSE: bool = false;
+
+enum CheckedValue {
+    Indeterminate,
+    True,
+    False
+}
+
+impl CheckedValue {
+    fn value(&self) -> &str {
+        match *self {
+            CheckedValue::Indeterminate => INDETERMINATE,
+            CheckedValue::True => "true",
+            CheckedValue::False => "false"
+        }
+    }
+}
+
 
 #[component]
 fn BubbleCheckbox (
@@ -40,14 +60,15 @@ fn BubbleCheckbox (
     // FIXME: still renders to "true" in the DOM. Most likely a Leptos issue
     // let value = if checked.get().clone() { "on" } else { "off" };
     // console_log(value);
- 
+
+    let (checked, set_checked) = create_signal(cx, INDETERMINATE);
+
     view! { cx,
         <button
             type="button"
             role="checkbox"
             aria-required=required.clone()
-            // TODO: add indeterminate state
-            aria-checked=INDETERMINATE
+            aria-checked=checked
             data-disabled=disabled.clone()
             // TODO: add composeEventHandlers
             on:keydown=move |ev| {
@@ -66,9 +87,21 @@ fn BubbleCheckbox (
             disabled=disabled
             required=required
             tab-index="-1"
-            checked=INDETERMINATE
+            checked=checked
             // TODO: uncomment when we have an Indicator component
             // style="position: 'absolute'; pointer_events: 'none'; opacity: 0; margin: 0;"
+
+            on:change=move |_| {
+                console_log(&checked.get());
+                let checked_update = match &checked.get() {
+                    &"indeterminate" => "true".to_string(),
+                    &"false" => "true".to_string(),
+                    &"true" => "false".to_string(),
+                    &_ => todo!()
+                };
+                console_log(&checked_update);
+                // set_checked(&checked_update);
+            }
         />
     }
 }
