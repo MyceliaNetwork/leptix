@@ -2,20 +2,10 @@ use leptos::*;
 // use either::*;
 use crate::routes::checkbox::leptos_dom::console_log;
 
-// mod types;
-// pub use types::*;
+mod types;
+pub use types::*;
 
 // TODO: make these pub and match on them within <Checkbox />
-
-#[non_exhaustive]
-struct CheckedValue;
-
-impl CheckedValue {
-    pub const Indeterminate: &str = "indeterminate";
-    pub const True: &str = "true";
-    pub const False: &str = "false";
-}
-
 #[component]
 fn BubbleCheckbox (
     cx: Scope,
@@ -31,7 +21,6 @@ fn BubbleCheckbox (
 
     // #[prop(into)]
     // checked: ReadSignal<bool>,
-
 ) -> impl IntoView {
     // disabled
     let mut disabled = disabled;
@@ -53,7 +42,7 @@ fn BubbleCheckbox (
     // let value = if checked.get().clone() { "on" } else { "off" };
     // console_log(value);
 
-    let (checked, set_checked) = create_signal(cx, CheckedValue::Indeterminate);
+    let (checked, set_checked) = create_signal(cx, CheckedValue::INDETERMINATE);
 
     view! { cx,
         <button
@@ -86,9 +75,9 @@ fn BubbleCheckbox (
             on:change=move |_| {
                 console_log(&checked.get());
                 let checked_update = match checked.get() {
-                    CheckedValue::Indeterminate => CheckedValue::True,
-                    CheckedValue::False => CheckedValue::True,
-                    CheckedValue::True => CheckedValue::False,
+                    CheckedValue::INDETERMINATE => CheckedValue::TRUE,
+                    CheckedValue::FALSE => CheckedValue::TRUE,
+                    CheckedValue::TRUE => CheckedValue::FALSE,
                     _ => todo!()
                 };
                 console_log(&checked_update);
