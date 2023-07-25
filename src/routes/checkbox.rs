@@ -4,24 +4,24 @@ use crate::routes::checkbox::leptos_dom::console_log;
 
 // TODO: make these pub and match on them within <Checkbox />
 const INDETERMINATE: &str = "indeterminate";
-const TRUE: bool = true;
-const FALSE: bool = false;
+const TRUE: &str = "true";
+const FALSE: &str = "false";
 
-enum CheckedValue {
-    Indeterminate,
-    True,
-    False
-}
+// enum CheckedValue {
+//     Indeterminate,
+//     True,
+//     False
+// }
 
-impl CheckedValue {
-    fn value(&self) -> &str {
-        match *self {
-            CheckedValue::Indeterminate => INDETERMINATE,
-            CheckedValue::True => "true",
-            CheckedValue::False => "false"
-        }
-    }
-}
+// impl CheckedValue {
+//     fn value(&self) -> &str {
+//         match *self {
+//             CheckedValue::Indeterminate => INDETERMINATE,
+//             CheckedValue::True => "true",
+//             CheckedValue::False => "false"
+//         }
+//     }
+// }
 
 
 #[component]
@@ -94,13 +94,13 @@ fn BubbleCheckbox (
             on:change=move |_| {
                 console_log(&checked.get());
                 let checked_update = match &checked.get() {
-                    &"indeterminate" => "true".to_string(),
-                    &"false" => "true".to_string(),
-                    &"true" => "false".to_string(),
-                    &_ => todo!()
+                    &INDETERMINATE => TRUE,
+                    &FALSE => TRUE,
+                    &TRUE => FALSE,
+                    _ => todo!()
                 };
                 console_log(&checked_update);
-                // set_checked(&checked_update);
+                set_checked(checked_update);
             }
         />
     }
