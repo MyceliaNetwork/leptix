@@ -43,6 +43,7 @@ fn BubbleCheckbox (
     // console_log(value);
 
     let (checked, set_checked) = create_signal(cx, CheckedValue::INDETERMINATE);
+    let (checked_enum, set_checked_enum) = create_signal(cx, Checked::Indeterminate);
 
     view! { cx,
         <button
@@ -80,6 +81,7 @@ fn BubbleCheckbox (
                     CheckedValue::TRUE => CheckedValue::FALSE,
                     _ => todo!()
                 };
+                set_checked_enum(checked_enum.get().toggle());
                 console_log(&checked_update);
                 set_checked(checked_update);
             }
