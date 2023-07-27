@@ -1,3 +1,5 @@
+use std::fmt;
+
 #[non_exhaustive]
 pub struct CheckedValue;
 
@@ -8,7 +10,7 @@ impl CheckedValue {
     pub const FALSE: &str = "false";
 }
 
-#[derive(Clone)]
+#[derive(Debug, Clone, Copy)]
 pub enum Checked {
   Indeterminate,
   False,
@@ -22,5 +24,15 @@ impl Checked {
         Checked::False => Checked::True,
         Checked::True => Checked::False,
     };
+  }
+}
+
+impl fmt::Display for Checked {
+  fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+      match self {
+          Checked::Indeterminate => write!(f, "true"),
+          Checked::False => write!(f, "true"),
+          Checked::True => write!(f, "false"),
+      }
   }
 }

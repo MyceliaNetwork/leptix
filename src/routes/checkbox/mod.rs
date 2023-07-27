@@ -72,9 +72,9 @@ fn BubbleCheckbox (
             checked=checked
             // TODO: uncomment when we have an Indicator component
             // style="position: 'absolute'; pointer_events: 'none'; opacity: 0; margin: 0;"
-
+            
             on:change=move |_| {
-                console_log(&checked.get());
+                // console_log(&checked.get());
                 let checked_update = match checked.get() {
                     CheckedValue::INDETERMINATE => CheckedValue::TRUE,
                     CheckedValue::FALSE => CheckedValue::TRUE,
@@ -82,7 +82,11 @@ fn BubbleCheckbox (
                     _ => todo!()
                 };
                 set_checked_enum(checked_enum.get().toggle());
-                console_log(&checked_update);
+
+                let checked_enum_print = checked_enum.get();
+                console_log(&checked_enum_print.to_string());
+
+                // console_log(&checked_update);
                 set_checked(checked_update);
             }
         />
