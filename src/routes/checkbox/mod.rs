@@ -42,8 +42,7 @@ fn BubbleCheckbox (
     // let value = if checked.get().clone() { "on" } else { "off" };
     // console_log(value);
 
-    let (checked, set_checked) = create_signal(cx, CheckedValue::INDETERMINATE);
-    let (checked_enum, set_checked_enum) = create_signal(cx, Checked::Indeterminate);
+    let (checked, set_checked) = create_signal(cx, Checked::Indeterminate);
 
     view! { cx,
         <button
@@ -72,22 +71,10 @@ fn BubbleCheckbox (
             checked=checked
             // TODO: uncomment when we have an Indicator component
             // style="position: 'absolute'; pointer_events: 'none'; opacity: 0; margin: 0;"
-            
             on:change=move |_| {
-                // console_log(&checked.get());
-                let checked_update = match checked.get() {
-                    CheckedValue::INDETERMINATE => CheckedValue::TRUE,
-                    CheckedValue::FALSE => CheckedValue::TRUE,
-                    CheckedValue::TRUE => CheckedValue::FALSE,
-                    _ => todo!()
-                };
-                set_checked_enum(checked_enum.get().toggle());
-
-                let checked_enum_print = checked_enum.get();
-                console_log(&checked_enum_print.to_string());
-
-                // console_log(&checked_update);
-                set_checked(checked_update);
+                set_checked(checked.get().toggle());
+                let checked_print = checked.get();
+                console_log(&checked_print.to_string());
             }
         />
     }

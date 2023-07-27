@@ -1,20 +1,12 @@
+use leptos::*;
 use std::fmt;
-
-#[non_exhaustive]
-pub struct CheckedValue;
-
-impl CheckedValue {
-    pub const INDETERMINATE: &str = "indeterminate";
-    // TODO: use bool value in stead
-    pub const TRUE: &str = "true";
-    pub const FALSE: &str = "false";
-}
+use std::{borrow::Cow};
 
 #[derive(Debug, Clone, Copy)]
 pub enum Checked {
-  Indeterminate,
   False,
   True,
+  Indeterminate,
 }
 
 impl Checked {
@@ -24,6 +16,27 @@ impl Checked {
         Checked::False => Checked::True,
         Checked::True => Checked::False,
     };
+  }
+}
+
+
+impl IntoAttribute for Checked {
+  #[inline(always)]
+  fn into_attribute(self, _: Scope) -> Attribute {
+      return match self {
+          Checked::Indeterminate => Attribute::String(Cow::Borrowed("indeterminate")),
+          Checked::True => Attribute::String(Cow::Borrowed("true")),
+          Checked::False => Attribute::String(Cow::Borrowed("false")),
+      };
+  }
+
+  #[inline(always)]
+  fn into_attribute_boxed(self: Box<Self>, _: Scope) -> Attribute {
+      return match *self {
+          Checked::Indeterminate => Attribute::String(Cow::Borrowed("indeterminate")),
+          Checked::True => Attribute::String(Cow::Borrowed("true")),
+          Checked::False => Attribute::String(Cow::Borrowed("false")),
+      };
   }
 }
 
