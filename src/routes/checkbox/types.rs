@@ -30,7 +30,7 @@ impl Checked {
 impl fmt::Display for Checked {
   fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
       match self {
-          Checked::Indeterminate => write!(f, "true"),
+          Checked::Indeterminate => write!(f, "indeterminate"),
           Checked::False => write!(f, "true"),
           Checked::True => write!(f, "false"),
       }
