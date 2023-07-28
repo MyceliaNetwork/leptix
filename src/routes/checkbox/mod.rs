@@ -1,5 +1,5 @@
 use leptos::*;
-// use crate::routes::checkbox::leptos_dom::console_log;
+use crate::routes::checkbox::leptos_dom::console_log;
 
 mod types;
 pub use types::*;
@@ -12,7 +12,7 @@ fn BubbleCheckbox (
     #[prop(optional, into)] class: Option<AttributeValue>,
     #[prop(optional, into)] disabled: Option<AttributeValue>,
     #[prop(optional, into)] required: Option<AttributeValue>,
-    #[prop(into)] checked: AttributeValue,
+    checked: ReadSignal<Checked>,
 ) -> impl IntoView {
     // disabled
     let mut disabled = disabled;
@@ -30,9 +30,12 @@ fn BubbleCheckbox (
     let required = required.unwrap();
     let required = required.into_attribute_boxed(cx);
 
-    // checked 
-    
-    let checked = checked.into_attribute_boxed(cx);
+    // checked_aria
+    let checked_aria = Signal::derive(cx, move || checked.get());
+    let checked_aria = Box::new(checked_aria).into_attribute_boxed(cx);
+
+    // checked
+    let checked = Box::new(checked).into_attribute_boxed(cx);
 
     // FIXME: still renders to "true" in the DOM. Most likely a Leptos issue
     // let value = if checked.get().clone() { "on" } else { "off" };
@@ -43,7 +46,7 @@ fn BubbleCheckbox (
             type="button"
             role="checkbox"
             aria-required=required.clone()
-            aria-checked=checked.clone()
+            aria-checked=checked_aria.clone()
             data-disabled=disabled.clone()
             // TODO: add composeEventHandlers
             on:keydown=move |ev| {
