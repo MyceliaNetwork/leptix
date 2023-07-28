@@ -19,7 +19,6 @@ impl Checked {
   }
 }
 
-
 impl IntoAttribute for Checked {
   #[inline(always)]
   fn into_attribute(self, _: Scope) -> Attribute {

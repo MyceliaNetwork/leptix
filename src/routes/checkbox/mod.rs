@@ -1,6 +1,5 @@
 use leptos::*;
-// use either::*;
-use crate::routes::checkbox::leptos_dom::console_log;
+// use crate::routes::checkbox::leptos_dom::console_log;
 
 mod types;
 pub use types::*;
@@ -9,18 +8,11 @@ pub use types::*;
 #[component]
 fn BubbleCheckbox (
     cx: Scope,
-
-    #[prop(optional, into)]
-    class: Option<AttributeValue>,
-
-    #[prop(optional, into)]
-    disabled: Option<AttributeValue>,
-
-    #[prop(optional, into)]
-    required: Option<AttributeValue>,
-
-    // #[prop(into)]
-    // checked: ReadSignal<bool>,
+    
+    #[prop(optional, into)] class: Option<AttributeValue>,
+    #[prop(optional, into)] disabled: Option<AttributeValue>,
+    #[prop(optional, into)] required: Option<AttributeValue>,
+    #[prop(into)] checked: AttributeValue,
 ) -> impl IntoView {
     // disabled
     let mut disabled = disabled;
@@ -38,18 +30,20 @@ fn BubbleCheckbox (
     let required = required.unwrap();
     let required = required.into_attribute_boxed(cx);
 
+    // checked 
+    
+    let checked = checked.into_attribute_boxed(cx);
+
     // FIXME: still renders to "true" in the DOM. Most likely a Leptos issue
     // let value = if checked.get().clone() { "on" } else { "off" };
     // console_log(value);
-
-    let (checked, set_checked) = create_signal(cx, Checked::Indeterminate);
 
     view! { cx,
         <button
             type="button"
             role="checkbox"
             aria-required=required.clone()
-            aria-checked=checked
+            aria-checked=checked.clone()
             data-disabled=disabled.clone()
             // TODO: add composeEventHandlers
             on:keydown=move |ev| {
@@ -71,11 +65,6 @@ fn BubbleCheckbox (
             checked=checked
             // TODO: uncomment when we have an Indicator component
             // style="position: 'absolute'; pointer_events: 'none'; opacity: 0; margin: 0;"
-            on:change=move |_| {
-                set_checked(checked.get().toggle());
-                let checked_print = checked.get();
-                console_log(&checked_print.to_string());
-            }
         />
     }
 }
@@ -85,6 +74,7 @@ pub fn CheckboxPage(cx: Scope) -> impl IntoView {
     // let (checked, set_checked) = create_signal(cx, false);
     let (disabled, set_disabled) = create_signal(cx, false);
     let (required, set_required) = create_signal(cx, false);
+    let (checked, set_checked) = create_signal(cx, Checked::Indeterminate);
 
     view! { cx,
         <h1>"Checkbox"</h1>
@@ -113,13 +103,12 @@ pub fn CheckboxPage(cx: Scope) -> impl IntoView {
         </div>
 
         <BubbleCheckbox
-            // checked=checked
+            checked=checked
             disabled=disabled
             required=required
-            // on:change=move |ev| {
-            //     // let value = if &ev { CheckedValue::True } else { CheckedValue::False };
-            //     set_checked(event_target_checked(&ev));
-            // }
+            on:change=move |_| {
+                set_checked(checked.get().toggle());
+            }
         />
     }
 }
