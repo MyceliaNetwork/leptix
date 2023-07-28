@@ -1,5 +1,6 @@
 use leptos::*;
-use crate::routes::checkbox::leptos_dom::console_log;
+// use crate::routes::checkbox::leptos_dom::console_log;
+use std::{borrow::Cow};
 
 mod types;
 pub use types::*;
@@ -31,9 +32,13 @@ fn BubbleCheckbox (
     let required = required.into_attribute_boxed(cx);
 
     // checked_aria
-    let checked_aria = Signal::derive(cx, move || checked.get());
-    let checked_aria = Box::new(checked_aria).into_attribute_boxed(cx);
-
+    let checked_aria = move ||
+        match checked.get() {
+            Checked::Indeterminate => Attribute::String(Cow::Borrowed("mixed")),
+            Checked::True => Attribute::String(Cow::Borrowed("true")),
+            Checked::False => Attribute::String(Cow::Borrowed("false")),
+        };
+        
     // checked
     let checked = Box::new(checked).into_attribute_boxed(cx);
 
@@ -46,7 +51,7 @@ fn BubbleCheckbox (
             type="button"
             role="checkbox"
             aria-required=required.clone()
-            aria-checked=checked_aria.clone()
+            aria-checked=Signal::derive(cx, checked_aria)
             data-disabled=disabled.clone()
             // TODO: add composeEventHandlers
             on:keydown=move |ev| {
