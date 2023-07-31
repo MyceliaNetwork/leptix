@@ -1,22 +1,19 @@
 use leptos::*;
 // use crate::routes::checkbox::leptos_dom::console_log;
+use std::{borrow::Cow};
 
+mod types;
+pub use types::*;
+
+// TODO: make these pub and match on them within <Checkbox />
 #[component]
 fn BubbleCheckbox (
     cx: Scope,
-
-    #[prop(optional, into)]
-    class: Option<AttributeValue>,
-
-    #[prop(optional, into)]
-    disabled: Option<AttributeValue>,
-
-    #[prop(optional, into)]
-    required: Option<AttributeValue>,
-
-    #[prop(into)]
-    checked: ReadSignal<bool>,
     
+    #[prop(optional, into)] class: Option<AttributeValue>,
+    #[prop(optional, into)] disabled: Option<AttributeValue>,
+    #[prop(optional, into)] required: Option<AttributeValue>,
+    checked: ReadSignal<Checked>,
 ) -> impl IntoView {
     // disabled
     let mut disabled = disabled;
@@ -34,18 +31,29 @@ fn BubbleCheckbox (
     let required = required.unwrap();
     let required = required.into_attribute_boxed(cx);
 
+    // checked_aria
+    let checked_aria = move ||
+        match checked.get() {
+            Checked::Indeterminate => Attribute::String(Cow::Borrowed("mixed")),
+            Checked::True => Attribute::String(Cow::Borrowed("true")),
+            Checked::False => Attribute::String(Cow::Borrowed("false")),
+        };
+        
+    // checked
+    let checked = Box::new(checked).into_attribute_boxed(cx);
+
     // FIXME: still renders to "true" in the DOM. Most likely a Leptos issue
     // let value = if checked.get().clone() { "on" } else { "off" };
     // console_log(value);
- 
+
     view! { cx,
         <button
             type="button"
             role="checkbox"
             aria-required=required.clone()
-            // TODO: add indeterminate state
-            aria-checked=checked
+            aria-checked=Signal::derive(cx, checked_aria)
             data-disabled=disabled.clone()
+            // TODO: add composeEventHandlers
             on:keydown=move |ev| {
                 // According to WAI ARIA, Checkboxes don't activate on enter keypress
                 if ev.key() == "Enter" {
@@ -53,6 +61,8 @@ fn BubbleCheckbox (
                 }
             }
         />
+        // TODO: use slots for conditionally rendering this:
+        // https://github.com/leptos-rs/leptos/blob/main/examples/slots/src/lib.rs
         <input
             type="checkbox"
             aria-hidden
@@ -60,6 +70,7 @@ fn BubbleCheckbox (
             disabled=disabled
             required=required
             tab-index="-1"
+            checked=checked
             // TODO: uncomment when we have an Indicator component
             // style="position: 'absolute'; pointer_events: 'none'; opacity: 0; margin: 0;"
         />
@@ -68,9 +79,10 @@ fn BubbleCheckbox (
 
 #[component]
 pub fn CheckboxPage(cx: Scope) -> impl IntoView {
-    let (checked, set_checked) = create_signal(cx, true);
+    // let (checked, set_checked) = create_signal(cx, false);
     let (disabled, set_disabled) = create_signal(cx, false);
     let (required, set_required) = create_signal(cx, false);
+    let (checked, set_checked) = create_signal(cx, Checked::Indeterminate);
 
     view! { cx,
         <h1>"Checkbox"</h1>
@@ -102,8 +114,8 @@ pub fn CheckboxPage(cx: Scope) -> impl IntoView {
             checked=checked
             disabled=disabled
             required=required
-            on:change=move |ev| {
-                set_checked(event_target_checked(&ev));
+            on:change=move |_| {
+                set_checked(checked.get().toggle());
             }
         />
     }
